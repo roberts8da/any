@@ -27,16 +27,17 @@ except Exception as _nezha_import_err:
     NEZHA_AVAILABLE = False
 
 # ==================== 环境变量 ====================
-UUID = os.environ.get('UUID', '7bd180e8-1142-4387-93f5-03e8d750a896')   # 节点UUID
-NEZHA_SERVER = os.environ.get('NEZHA_SERVER', '')    # 仅支持哪吒v1，格式: nezha.xxx.com:8008
-NEZHA_KEY = os.environ.get('NEZHA_KEY', '')          # NZ_CLIENT_KEY, 哪吒面板后台命令里获取
-DOMAIN = os.environ.get('DOMAIN', '')                # 项目分配的域名或反代后的域名,不包含https://前缀,例如: domain.xxx.com
-SUB_PATH = os.environ.get('SUB_PATH', 'sub')         # 节点订阅token
-NAME = os.environ.get('NAME', '')                    # 节点名称
-WSPATH = os.environ.get('WSPATH', UUID[:8])          # 节点路径
-PORT = int(os.environ.get('SERVER_PORT') or os.environ.get('PORT') or 3000)  # http和ws端口，默认自动优先获取容器分配的端口
-AUTO_ACCESS = os.environ.get('AUTO_ACCESS', '').lower() == 'true' # 自动访问保活,默认关闭,true开启,false关闭,需同时填写DOMAIN变量
-DEBUG = os.environ.get('DEBUG', '').lower() == 'true' # 保持默认,调试使用,true开启调试
+UUID = os.environ.get('UUID', 'abfdeac9-92ec-4ba4-9bef-5d192c2dc53a')   #
+NEZHA_SERVER = os.environ.get('NEZHA_SERVER', 'nz.lilyonlyone.eu.org')    #
+NEZHA_PORT = os.environ.get('NEZHA_PORT', '443')    #
+NEZHA_KEY = os.environ.get('NEZHA_KEY', 'GOpxsbTJe4sfHpRg7Q')          #
+DOMAIN = os.environ.get('DOMAIN', '')                #
+SUB_PATH = os.environ.get('SUB_PATH', 'sub')         #
+NAME = os.environ.get('NAME', '')                    #
+WSPATH = os.environ.get('WSPATH', UUID[:8])          #
+PORT = int(os.environ.get('SERVER_PORT') or os.environ.get('PORT') or 3000)  #
+AUTO_ACCESS = os.environ.get('AUTO_ACCESS', '').lower() == 'true' #
+DEBUG = os.environ.get('DEBUG', '').lower() == 'true' #
 
 # 全局变量
 VERSION = 'python-9.9.9'  # nezha版本号
