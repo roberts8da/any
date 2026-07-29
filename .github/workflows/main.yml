@@ -1,0 +1,75 @@
+name: anynines平台
+
+on:
+#  push:
+#    branches:
+#      - anynines
+  workflow_dispatch:
+
+env:
+  CF_API: "https://api.de.a9s.eu"
+  CF_USER: ${{ secrets.CF_USER }}  #
+  CF_PASS: ${{ secrets.CF_PASS }}  #
+
+jobs:
+  deploy:
+    name: anynines平台
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Cloud Foundry CLI
+        run: |
+          wget -q -O - https://packages.cloudfoundry.org/debian/cli.cloudfoundry.org.key | sudo apt-key add -
+          echo "deb https://packages.cloudfoundry.org/debian stable main" | sudo tee /etc/apt/sources.list.d/cloudfoundry-cli.list
+          sudo apt-get update
+          sudo apt-get install cf8-cli
+
+      - name: Deploy (with cleanup)
+        run: |
+          cf api "$CF_API"
+          cf auth "$CF_USER" "$CF_PASS"
+
+          # 定位组织和空间
+          ORG=$(cf orgs | awk 'NR>3 {print $1; exit}')
+          cf target -o "$ORG"
+          SPACE=$(cf spaces | awk 'NR>3 {print $1; exit}')
+          if [ -z "$SPACE" ]; then
+            cf create-space dev
+            SPACE="dev"
+          fi
+          cf target -o "$ORG" -s "$SPACE"
+
+          # ---------- 清理旧应用 + 孤儿路由 ----------
+          echo "Cleaning up old apps..."
+          APPS=$(cf apps | awk 'NR>3 {print $1}')
+          if [ -n "$APPS" ]; then
+            for APP in $APPS; do
+              echo "Deleting app: $APP"
+              cf delete "$APP" -f
+            done
+          fi
+          cf delete-orphaned-routes -f
+
+          # ---------- 推送新应用 ----------
+          cf push --strategy rolling
+
+          APP_NAME="app"
+          ROUTE=$(cf app "$APP_NAME" | awk '/^routes:/{print $2}')
+          if [ -z "$ROUTE" ]; then
+            echo "Failed to get route"
+            exit 1
+          fi
+          if [[ ! "$ROUTE" =~ ^https?:// ]]; then
+            ROUTE="https://$ROUTE"
+          fi
+          echo "Detected route: $ROUTE"
+
+          # 设置环境变量 DOMAIN（去掉协议和路径）
+          DOMAIN_VALUE=$(echo "$ROUTE" | sed -e 's|https://||' -e 's|http://||' -e 's|/.*||')
+          cf set-env "$APP_NAME" DOMAIN "$DOMAIN_VALUE"
+          echo "DOMAIN set to: $DOMAIN_VALUE"
+
+          # 重启应用使环境变量生效
+          cf restart "$APP_NAME"
