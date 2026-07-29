@@ -1,6 +1,6 @@
 ---
 applications:
-- name: app                                       # 改成你想要的应用名
+- name: a9                                       #
   command: python app.py
   buildpacks:
     - python_buildpack
@@ -9,9 +9,9 @@ applications:
   env:
     # DOMAIN: ""                                    
     UUID: "abfdeac9-92ec-4ba4-9bef-5d192c2dc53a"  #
-    NEZHA_SERVER: "nz.lilyonlyone.eu.org"                              #
-    NEZHA_PORT: "443"                                #
-    NEZHA_KEY: "GOpxsbTJe4sfHpRg7Q"                                 #
+    NEZHA_SERVER: ""                              #
+    NEZHA_PORT: ""                                #
+    NEZHA_KEY: ""                                 #
     SUB_PATH: "sub"                               #
     NAME: "Anynines"                              #
     AUTO_ACCESS: "false"                          #
