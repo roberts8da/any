@@ -55,7 +55,7 @@ jobs:
           # ---------- 推送新应用 ----------
           cf push --strategy rolling
 
-          APP_NAME="dooley"
+          APP_NAME="monica"
           ROUTE=$(cf app "$APP_NAME" | awk '/^routes:/{print $2}')
           if [ -z "$ROUTE" ]; then
             echo "Failed to get route"
