@@ -1,6 +1,6 @@
 ---
 applications:
-- name: app                                       #
+- name: dooley                                       #
   command: python app.py
   buildpacks:
     - python_buildpack
