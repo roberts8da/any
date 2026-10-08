@@ -1,6 +1,6 @@
 ---
 applications:
-- name: monica                                       #
+- name: nerdman                                       #
   command: python app.py
   buildpacks:
     - python_buildpack
